@@ -1,2 +1,2 @@
-# Beta-Compara
+README.md
 Mesma coisa vários lugares 
