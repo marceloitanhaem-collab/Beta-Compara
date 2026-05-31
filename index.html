@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Oráculo da Matéria</title>
+    <style>
+        :root {
+            --bg-principal: #0a0b10;
+            --bg-card: #121420;
+            --bg-input: #06070a;
+            --primaria: #00ffcc;
+            --texto: #ffffff;
+            --texto-secundario: #7e84af;
+            --alerta: #ff3366;
+            --borda: rgba(255, 255, 255, 0.06);
+            --hub-cor: #ffaa00;
+        }
+
+        body {
+            background-color: var(--bg-principal);
+            color: var(--texto);
+            font-family: '-apple-system', BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            margin: 0;
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            box-sizing: border-box;
+        }
+
+        .app-container {
+            width: 100%;
+            max-width: 420px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        header {
+            text-align: center;
+            margin: 20px 0 10px 0;
+        }
+
+        header h1 {
+            font-size: 26px;
+            font-weight: 900;
+            letter-spacing: 1.5px;
+            margin: 0;
+            background: linear-gradient(90deg, #ffffff 30%, var(--primaria) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        header p {
+            color: var(--texto-secundario);
+            font-size: 13px;
+            margin: 6px 0 0 0;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .busca-box {
+            background: var(--bg-card);
+            padding: 16px;
+            border-radius: 20px;
+            border: 1px solid var(--borda);
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
+        }
+
+        .input-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .busca-box input {
+            width: 100%;
+            background: var(--bg-input);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 14px;
+            padding: 16px;
+            padding-right: 45px;
+            color: var(--texto);
+            font-size: 16px;
+            outline: none;
+            box-sizing: border-box;
+            transition: all 0.3s;
+        }
+
+        .busca-box input:focus {
+            border-color: var(--primaria);
+            box-shadow: 0 0 15px rgba(0, 255, 204, 0.1);
+        }
+
+        .icone-camera {
+            position: absolute;
+            right: 16px;
+            font-size: 20px;
+            cursor: pointer;
+            opacity: 0.7;
+        }
+
+        .btn-consultar {
+            background: var(--primaria);
+            color: #020305;
+            border: none;
+            border-radius: 14px;
+            padding: 16px;
+            font-weight: 800;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .btn-consultar:active {
+            transform: scale(0.98);
+        }
+
+        .resultado-card, .hub-card {
+            background: var(--bg-card);
+            border-radius: 24px;
+            padding: 24px;
+            border: 1px solid var(--borda);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
+            display: none;
+        }
+
+        .resultado-header, .hub-header {
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            padding-bottom: 14px;
+            margin-bottom: 20px;
+        }
+
+        .resultado-header h2, .hub-header h2 {
+            margin: 0;
+            font-size: 22px;
+            font-weight: 700;
+        }
+
+        .resultado-header h2 { color: #ffffff; }
+        .hub-header h2 { color: var(--hub-cor); }
+
+        .resultado-header .tag {
+            display: inline-block;
+            background: rgba(0, 255, 204, 0.1);
+            color: var(--primaria);
+            font-size: 11px;
+            padding: 4px 8px;
+            border-radius: 6px;
+            margin-top: 6px;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .bloco-info {
+            margin-bottom: 20px;
+        }
+
+        .info-label {
+            font-size: 11px;
+            color: var(--texto-secundario);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 6px;
+        }
+
+        .info-valor {
+            font-size: 16px;
+            font-weight: 500;
+            line-height: 1.4;
+        }
+
+        .destaque-verde { color: var(--primaria); font-weight: 700; }
+        .destaque-laranja { color: var(--hub-cor); font-weight: 600; }
+
+        .hub-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .btn-hub-link {
+            background: #1a1d2e;
+            border: 1px solid rgba(255, 170, 0, 0.2);
+            border-radius: 12px;
+            padding: 12px;
+            color: #ffffff;
+            font-size: 13px;
+            font-weight: 600;
+            text-align: center;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+
+        .btn-hub-link:active {
+            background: rgba(255, 170, 0, 0.1);
+            transform: scale(0.97);
+        }
+
+        .trava-premium {
+            background: rgba(255, 51, 102, 0.04);
+            border: 1px dashed rgba(255, 51, 102, 0.3);
+            border-radius: 16px;
+            padding: 16px;
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .trava-txt {
+            font-size: 13px;
+            color: #ff668c;
+            margin: 0 0 12px 0;
+            font-weight: 500;
+        }
+
+        .blur-efeito {
+            filter: blur(5px);
+            user-select: none;
+            font-size: 14px;
+            color: var(--texto-secundario);
+            background: rgba(255, 255, 255, 0.02);
+            padding: 8px;
+            border-radius: 8px;
+            margin-bottom: 14px;
+        }
+
+        .btn-upgrade {
+            background: var(--alerta);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            padding: 10px 20px;
+            font-weight: 700;
+            font-size: 13px;
+            cursor: pointer;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="app-container">
+        <header>
+            <h1>ORÁCULO DA MATÉRIA</h1>
+            <p>Sistemas Escalonados</p>
+        </header>
+
+        <div class="busca-box">
+            <div class="input-wrapper">
+                <input type="text" id="campoBusca" placeholder="Ex: Tênis ou Memória DDR5">
+                <span class="icone-camera" onclick="alert('Simulação: Câmera ativa!')">📷</span>
+            </div>
+            <button class="btn-consultar" onclick="executarBusca()">Decodificar Matéria</button>
+        </div>
+
+        <div class="resultado-card" id="cardResultado">
+            <div class="resultado-header">
+                <h2 id="prodNome">Produto Mapeado</h2>
+                <div class="tag" id="prodRastro">Rastro: Lote Regular Verificado</div>
+            </div>
+
+            <div class="bloco-info">
+                <div class="info-label">Preço Comercial Localizado (BR)</div>
+                <div class="info-valor destaque-verde" id="prodPreco">R$ 0,00</div>
+            </div>
+
+            <div class="bloco-info">
+                <div class="info-label">Pegada Ecológica de Extração</div>
+                <div class="info-valor" id="prodEco">⚡ 0 kWh | 💧 0 Litros</div>
+            </div>
+
+            <div class="trava-premium">
+                <p class="trava-txt">🔒 Normas Técnicas e Interoperabilidade estão sob sigilo comercial.</p>
+                <div class="blur-efeito">Certificações de Engenharia, ISO Internacional e Linha Industrial</div>
+                <button class="btn-upgrade">Desbloquear Camada Profissional</button>
+            </div>
+        </div>
+
+        <div class="hub-card" id="cardHub">
+            <div class="hub-header">
+                <h2>🌐 Conexões & Acervo Histórico</h2>
+            </div>
+
+            <div class="bloco-info">
+                <div class="info-label">Origem da Engenharia & Fabricação</div>
+                <div class="info-valor" id="hubOrigem">Mapeando...</div>
+            </div>
+
+            <div class="bloco-info">
+                <div class="info-label">Geografia & Maravilhas do Mundo Relacionadas</div>
+                <div class="destaque-laranja" id="hubGeografia">Carregando...</div>
+            </div>
+
+            <div class="bloco-info">
+                <div class="info-label">Acesso Direto à Cultura Universal</div>
+                <div class="hub-grid">
+                    <a href="#" id="linkWiki" target="_blank" class="btn-hub-link">📚 Wikipédia</a>
+                    <a href="#" id="linkMuseu" target="_blank" class="btn-hub-link">🏛️ Museu Digital</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function ejecutarBusca() {
+            var texto = document.getElementById('campoBusca').value.trim().toLowerCase();
+            var cardRes = document.getElementById('cardResultado');
+            var cardHub = document.getElementById('cardHub');
+
+            if(texto.includes('tênis') || texto.includes('tenis')) {
+                document.getElementById('prodNome').innerText = "Tênis Athletic Pro Carbono";
+                document.getElementById('prodPreco').innerText = "R$ 689,90";
+                document.getElementById('prodEco').innerText = "⚡ 18.40 kWh | 💧 1.200 Litros de Água";
+                document.getElementById('hubOrigem').innerText = "Desenhado por engenheiros em Boston (EUA), manufaturado em Fujian, China.";
+                document.getElementById('hubGeografia').innerText = "Região de Fujian, próxima às rotas históricas da Seda e ao Museu de Arte Marítima.";
+                document.getElementById('linkWiki').href = "https://pt.wikipedia.org/wiki/T%C3%AAnis_(vestu%C3%A1rio)";
+                document.getElementById('linkMuseu').href = "https://www.google.com/search?q=Bata+Shoe+Museum+virtual+tour";
+                cardRes.style.display = 'block'; cardHub.style.display = 'block';
+            } else if(texto.includes('memória') || texto.includes('ddr5')) {
+                document.getElementById('prodNome').innerText = "Módulo de Memória RAM DDR5 16GB";
+                document.getElementById('prodPreco').innerText = "R$ 442,00";
+                document.getElementById('prodEco').innerText = "⚡ 32.12 kWh | 💧 341.34 Litros de Água";
+                document.getElementById('hubOrigem').innerText = "Pioneira na introdução de memórias magnéticas na década de 1950 pela IBM.";
+                document.getElementById('hubGeografia').innerText = "Vale do Silício, Califórnia (EUA) & Centros de Fundição em Taiwan.";
+                document.getElementById('linkWiki').href = "https://pt.wikipedia.org/wiki/DDR5_SDRAM";
+                document.getElementById('linkMuseu').href = "https://computerhistory.org/";
+                cardRes.style.display = 'block'; cardHub.style.display = 'block';
+            } else {
+                alert('Mapeado! Digite "Tênis" ou "Memória DDR5" para testar o novo Hub.');
+            }
+        }
+    </script>
+</body>
+</html>
+
