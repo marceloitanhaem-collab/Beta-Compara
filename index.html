@@ -255,94 +255,123 @@
     <div class="app-container">
         <header>
             <h1>ORÁCULO DA MATÉRIA</h1>
-            <p>Sistemas Escalonados</p>
+            <p>Conexão Nuvem Ativa</p>
         </header>
 
         <div class="busca-box">
             <div class="input-wrapper">
-                <input type="text" id="campoBusca" placeholder="Ex: Tênis ou Memória DDR5">
-                <span class="icone-camera" onclick="alert('Simulação: Câmera ativa!')">📷</span>
+                <input type="text" id="campoBusca" placeholder="Digite a chave (Ex: memoria_ddr5)">
+                <span class="icone-camera" onclick="alert('Câmera Ativa para Leitura de Lote!')">📷</span>
             </div>
-            <button class="btn-consultar" onclick="executarBusca()">Decodificar Matéria</button>
+            <button class="btn-consultar" onclick="executarBuscaReal()">Decodificar do Banco</button>
         </div>
 
         <div class="resultado-card" id="cardResultado">
             <div class="resultado-header">
-                <h2 id="prodNome">Produto Mapeado</h2>
-                <div class="tag" id="prodRastro">Rastro: Lote Regular Verificado</div>
+                <h2 id="prodNome">Carregando...</h2>
+                <div class="tag" id="prodRastro">Rastro Verificado</div>
             </div>
 
             <div class="bloco-info">
-                <div class="info-label">Preço Comercial Localizado (BR)</div>
-                <div class="info-valor destaque-verde" id="prodPreco">R$ 0,00</div>
+                <div class="info-label">Preço Base de Mercado</div>
+                <div class="info-valor destaque-verde" id="prodPreco">$ 0.00</div>
             </div>
 
             <div class="bloco-info">
-                <div class="info-label">Pegada Ecológica de Extração</div>
-                <div class="info-valor" id="prodEco">⚡ 0 kWh | 💧 0 Litros</div>
+                <div class="info-label">Ano de Referência / Lote</div>
+                <div class="info-valor" id="prodAno">-</div>
             </div>
 
             <div class="trava-premium">
-                <p class="trava-txt">🔒 Normas Técnicas e Interoperabilidade estão sob sigilo comercial.</p>
-                <div class="blur-efeito">Certificações de Engenharia, ISO Internacional e Linha Industrial</div>
-                <button class="btn-upgrade">Desbloquear Camada Profissional</button>
+                <p class="trava-txt">🔒 Dados Avançados Industriais Bloqueados</p>
+                <div class="blur-efeito" id="prodBlur">Normas Técnicas Restritas</div>
+                <button class="btn-upgrade">Assinar Camada PRO</button>
             </div>
         </div>
 
         <div class="hub-card" id="cardHub">
             <div class="hub-header">
-                <h2>🌐 Conexões & Acervo Histórico</h2>
+                <h2>🌐 Conexões Culturais & Acervo</h2>
             </div>
 
             <div class="bloco-info">
-                <div class="info-label">Origem da Engenharia & Fabricação</div>
-                <div class="info-valor" id="hubOrigem">Mapeando...</div>
+                <div class="info-label">História e Cultura Pop</div>
+                <div class="info-valor" id="hubCultura" style="font-size: 14px; color: #cbd0f7;">-</div>
             </div>
 
             <div class="bloco-info">
-                <div class="info-label">Geografia & Maravilhas do Mundo Relacionadas</div>
-                <div class="destaque-laranja" id="hubGeografia">Carregando...</div>
+                <div class="info-label">Patrocinador Histórico</div>
+                <div class="destaque-laranja" id="hubPatrocinio">-</div>
             </div>
 
             <div class="bloco-info">
                 <div class="info-label">Acesso Direto à Cultura Universal</div>
                 <div class="hub-grid">
                     <a href="#" id="linkWiki" target="_blank" class="btn-hub-link">📚 Wikipédia</a>
-                    <a href="#" id="linkMuseu" target="_blank" class="btn-hub-link">🏛️ Museu Digital</a>
+                    <a href="#" id="linkMuseu" target="_blank" class="btn-hub-link">🏛️ Acervo Digital</a>
                 </div>
             </div>
         </div>
     </div>
 
     <script>
-        function ejecutarBusca() {
-            var texto = document.getElementById('campoBusca').value.trim().toLowerCase();
-            var cardRes = document.getElementById('cardResultado');
-            var cardHub = document.getElementById('cardHub');
+        // ==========================================
+        // COLE AS SUAS CREDENCIAIS DO SUPABASE AQUI:
+        // ==========================================
+        const SUPABASE_URL = "SUA_PROJECT_URL_AQUI"; 
+        const SUPABASE_KEY = "SUA_ANON_PUBLIC_KEY_AQUI";
 
-            if(texto.includes('tênis') || texto.includes('tenis')) {
-                document.getElementById('prodNome').innerText = "Tênis Athletic Pro Carbono";
-                document.getElementById('prodPreco').innerText = "R$ 689,90";
-                document.getElementById('prodEco').innerText = "⚡ 18.40 kWh | 💧 1.200 Litros de Água";
-                document.getElementById('hubOrigem').innerText = "Desenhado por engenheiros em Boston (EUA), manufaturado em Fujian, China.";
-                document.getElementById('hubGeografia').innerText = "Região de Fujian, próxima às rotas históricas da Seda e ao Museu de Arte Marítima.";
-                document.getElementById('linkWiki').href = "https://pt.wikipedia.org/wiki/T%C3%AAnis_(vestu%C3%A1rio)";
-                document.getElementById('linkMuseu').href = "https://www.google.com/search?q=Bata+Shoe+Museum+virtual+tour";
-                cardRes.style.display = 'block'; cardHub.style.display = 'block';
-            } else if(texto.includes('memória') || texto.includes('ddr5')) {
-                document.getElementById('prodNome').innerText = "Módulo de Memória RAM DDR5 16GB";
-                document.getElementById('prodPreco').innerText = "R$ 442,00";
-                document.getElementById('prodEco').innerText = "⚡ 32.12 kWh | 💧 341.34 Litros de Água";
-                document.getElementById('hubOrigem').innerText = "Pioneira na introdução de memórias magnéticas na década de 1950 pela IBM.";
-                document.getElementById('hubGeografia').innerText = "Vale do Silício, Califórnia (EUA) & Centros de Fundição em Taiwan.";
-                document.getElementById('linkWiki').href = "https://pt.wikipedia.org/wiki/DDR5_SDRAM";
-                document.getElementById('linkMuseu').href = "https://computerhistory.org/";
-                cardRes.style.display = 'block'; cardHub.style.display = 'block';
-            } else {
-                alert('Mapeado! Digite "Tênis" ou "Memória DDR5" para testar o novo Hub.');
+        async function executarBuscaReal() {
+            var termo = document.getElementById('campoBusca').value.trim().toLowerCase();
+            if(!termo) return alert("Digite algo para buscar!");
+
+            // Chama a API do Supabase trazendo a tabela filtrada pela chave de busca
+            var urlConsulta = `${SUPABASE_URL}/rest/v1/produtos_oraculo?chave_busca=eq.${termo}`;
+
+            try {
+                var resposta = await fetch(urlConsulta, {
+                    method: "GET",
+                    headers: {
+                        "apikey": SUPABASE_KEY,
+                        "Authorization": `Bearer ${SUPABASE_KEY}`
+                    }
+                });
+
+                var dados = await resposta.json();
+
+                if(dados.length === 0) {
+                    alert("Produto não localizado no banco. Adicionado à fila de mineração automática!");
+                    return;
+                }
+
+                var produto = dados[0];
+
+                // Exibe os Cards na tela
+                document.getElementById('cardResultado').style.display = 'block';
+                document.getElementById('cardHub').style.display = 'block';
+
+                // Preenche os dados técnicos reais vindos da Nuvem
+                document.getElementById('prodNome').innerText = produto.nome;
+                document.getElementById('prodPreco').innerText = `US$ ${parseFloat(produto.preco_base_usd).toFixed(2)}`;
+                document.getElementById('prodAno').innerText = `Lote Cadastrado em: ${produto.ano_referencia}`;
+                document.getElementById('prodRastro').innerText = `Rastro: ${produto.rastro_seguranca.toUpperCase()}`;
+                document.getElementById('prodBlur').innerText = produto.normas_tecnicas ? produto.normas_tecnicas.join(', ') : '🔒 Bloqueado';
+
+                // Preenche o Hub Cultural real vindo da Nuvem
+                document.getElementById('hubCultura').innerText = produto.cultura_pop || "Fatos históricos sendo coletados.";
+                document.getElementById('hubPatrocinio').innerText = `${produto.empresa_patrocinio || 'Sem Patrocínio'} - ${produto.fato_historico || ''}`;
+                
+                // Configura os links automáticos da Wikipédia e do Museu
+                document.getElementById('linkWiki').href = `https://pt.wikipedia.org/wiki/${encodeURIComponent(produto.nome)}`;
+                document.getElementById('linkMuseu').href = produto.url_patrocinio || "https://computerhistory.org/";
+
+                window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+
+            } catch (erro) {
+                console.error(erro);
+                alert("Erro ao conectar com a nuvem do Oráculo.");
             }
         }
     </script>
-</body>
-</html>
-
+</body>eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imx0aXFmdGhibHNva3RndmJ2a2d1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAyMzkxNzcsImV4cCI6MjA5NTgxNTE3N30.gdbkoLU2aJqAronR5w409JfHqTNkE_p61bomGPU3Jj8
+</html>eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imx0aXFmdGhibHNva3RndmJ2a2d1Iiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc4MDIzOTE3NywiZXhwIjoyMDk1ODE1MTc3fQ.yD9-26zfv9y8bp3c8a9okPxEpVU1_IPVxL-7xKIdaH8
