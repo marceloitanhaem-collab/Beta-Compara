@@ -256,13 +256,12 @@
 
         <div class="busca-box">
             <div class="input-wrapper">
-                <input type="text" id="campoBusca" placeholder="Tire uma foto ou digite ex: anel">
-                <span class="icone-camera" onclick="alert('Câmera Ativada: Escaneando Matéria por Tags Visuais!')">📷</span>
+                <input type="text" id="campoBusca" placeholder="Ex: memoria_ddr5">
+                <span class="icone-camera" onclick="alert('Câmera Simulada!')">📷</span>
             </div>
             <button class="btn-consultar" onclick="executarBusca()">Decodificar Matéria</button>
         </div>
 
-        <!-- CARD DE INFOS -->
         <div class="resultado-card" id="cardResultado">
             <div class="resultado-header">
                 <h2 id="prodNome">Carregando...</h2>
@@ -291,7 +290,6 @@
             </div>
         </div>
 
-        <!-- HUB CULTURAL -->
         <div class="hub-card" id="cardHub">
             <div class="hub-header">
                 <h2>🌐 Conexões & Acervo Histórico</h2>
@@ -313,19 +311,21 @@
     </div>
 
     <script>
+        // CREDENCIAIS DE ACESSO CONECTADAS DO MARCELO
         const SUPABASE_URL = "https://ltiqfthblsoktgvbvkgu.supabase.co";
         const SUPABASE_KEY = "EyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imx0aXFmdGhibHNva3RndmJ2a2d1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAyMzkxNzcsImV4cCI6MjA5NTgxNTE3N30.gdbkoLU2aJqAronR5w409JfHqTNkE_p61bomGPU3Jj8";
 
-        async function ejecutarBusca() {
-            var inputTxt = document.getElementById('campoBusca').value.trim().toLowerCase();
+        async function executarBusca() {
+            // Prepara o termo de busca limpando caracteres especiais
+            var inputTxt = document.getElementById('campoBusca').value.trim().toLowerCase().replace(/ /g, "_");
             
             if(!inputTxt) {
-                alert("Por favor, digite ou simule uma imagem para buscar.");
+                alert("Por favor, digite uma palavra-chave para buscar.");
                 return;
             }
 
-            // NOVO MOTOR DE BUSCA: Filtra se o texto está contido na lista de tags visuais do banco
-            var endpoint = `${SUPABASE_URL}/rest/v1/produtos_oraculo?tags_visuais=cs.{${inputTxt}}&select=*`;
+            // Monta o endereço exato para filtrar pela coluna 'chave_busca' na tabela 'produtos_oraculo'
+            var endpoint = `${SUPABASE_URL}/rest/v1/produtos_oraculo?chave_busca=eq.${inputTxt}&select=*`;
 
             try {
                 var resposta = await fetch(endpoint, {
@@ -339,25 +339,18 @@
 
                 var dados = await resposta.json();
 
-                // Se não achar por tag, tenta uma busca exata por chave de segurança reserva
-                if (!dados || dados.length === 0) {
-                    var endpointChave = `${SUPABASE_URL}/rest/v1/produtos_oraculo?chave_busca=eq.${inputTxt.replace(/ /g, "_")}&select=*`;
-                    var respChave = await fetch(endpointChave, {
-                        method: "GET",
-                        headers: { "apikey": SUPABASE_KEY, "Authorization": `Bearer ${SUPABASE_KEY}` }
-                    });
-                    dados = await respChave.json();
-                }
-
                 if (dados && dados.length > 0) {
                     var produto = dados[0];
 
+                    // 1. Preenche os campos do Layout com dados REAIS do seu Supabase
                     document.getElementById('prodNome').innerText = produto.nome;
                     document.getElementById('prodRastro').innerText = "Rastro: " + produto.rastro_seguranca.replace(/_/g, " ");
                     
+                    // Cálculo de conversão simples (Preço Base em Dólar x Câmbio de 5.20)
                     var precoReal = parseFloat(produto.preco_base_usd) * 5.20;
                     document.getElementById('prodPreco').innerText = `R$ ${precoReal.toFixed(2)}`;
 
+                    // Processamento científico da pegada com base nos pesos cadastrados no banco
                     var silicio = parseFloat(produto.composicao_silicio_kg || 0);
                     var cobre = parseFloat(produto.composicao_cobre_kg || 0);
                     var ferro = parseFloat(produto.composicao_ferro_kg || 0);
@@ -368,26 +361,30 @@
                     document.getElementById('prodEco').innerText = `⚡ ${energiaTotal.toFixed(2)} kWh | 💧 ${aguaTotal.toFixed(2)} Litros de Água`;
                     document.getElementById('prodCultura').innerText = produto.cultura_pop || "Nenhum dado pop registrado.";
                     
+                    // Preenche a trava desfocada do plano Premium
                     var normas = Array.isArray(produto.normas_tecnicas) ? produto.normas_tecnicas.join(", ") : "ISO Pendente";
                     document.getElementById('prodBlur').innerText = `${normas} | ${produto.interop_medica || ''}`;
 
+                    // 2. Preenche o seu Novo Hub de Conexões Históricas/Museus
                     document.getElementById('hubOrigem').innerText = `${produto.empresa_patrocinio || 'Desconhecida'} — ${produto.fato_historico || 'Sem registro adicional'}`;
                     
+                    // Links dinâmicos
                     document.getElementById('linkWiki').href = produto.url_patrocinio || "https://wikipedia.org";
                     document.getElementById('linkMuseu').href = "https://computerhistory.org/"; 
 
+                    // Torna as telas visíveis na tela do celular
                     document.getElementById('cardResultado').style.display = 'block';
                     document.getElementById('cardHub').style.display = 'block';
 
                     window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
 
                 } else {
-                    alert(`Nenhum item com a tag ou imagem de "${inputTxt}" foi localizado no Oráculo ainda.`);
+                    alert(`Item "${inputTxt}" não está cadastrado no Supabase ainda. Digite "memoria_ddr5" para testar a conexão viva!`);
                 }
 
             } catch (erro) {
                 console.error(erro);
-                alert("Erro ao conectar com a nuvem do Supabase.");
+                alert("Erro ao conectar com a nuvem do Supabase. Verifique sua conexão.");
             }
         }
     </script>
