@@ -1,4 +1,4 @@
-// Remove o menu antigo antes de criar um novo para evitar duplicatas
+// Remove menus anteriores para evitar o erro de duplicidade
 chrome.contextMenus.removeAll(() => {
   chrome.contextMenus.create({
     id: "analisar-imagem",
@@ -7,12 +7,11 @@ chrome.contextMenus.removeAll(() => {
   });
 });
 
-// Escuta o clique no botão
+// Escuta o clique
 chrome.contextMenus.onClicked.addListener((info) => {
   if (info.menuItemId === "analisar-imagem") {
-    console.log("Imagem capturada para análise:", info.srcUrl);
-    
-    // Em vez de alert(), usamos um log ou uma notificação
-    console.log("Processando imagem...");
+    console.log("Imagem capturada com sucesso!");
+    // Aqui não usamos mais o alert()
+    console.log("URL da imagem:", info.srcUrl);
   }
 });
