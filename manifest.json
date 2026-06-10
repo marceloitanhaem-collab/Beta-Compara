@@ -1,9 +1,22 @@
 {
-  "manifest_version": 3,
-  "name": "Oráculo da Matéria",
-  "version": "1.0",
-  "permissions": ["contextMenus", "storage", "notifications"],
-  "background": {
-    "service_worker": "background.js"
-  }
+  "short_name": "MiaTech",
+  "name": "MiaTech — Semia IA",
+  "description": "Buscador ontológico de produtos powered by Semia IA",
+  "icons": [
+    {
+      "src": "icone_miatech_192.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    },
+    {
+      "src": "icone_miatech_512.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
+  ],
+  "start_url": "/index.html",
+  "background_color": "#0a0b10",
+  "theme_color": "#0a0b10",
+  "display": "standalone",
+  "orientation": "portrait-primary"
 }
